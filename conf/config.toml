@@ -1,0 +1,28 @@
+[app]
+name = "app"
+mode = "dev"
+port = 8080
+
+[db]
+host = "127.0.0.1"
+port = 3306
+user = "root"
+password = "123456"
+dbname = "blog"
+maxOpenConn = 50
+maxIdleConn = 10
+
+[log]
+level = "debug"
+filename = "app.log"
+maxSize = 200
+maxAge = 30
+maxBackups = 7
+
+[redis]
+host = "127.0.0.1"
+port = 6379
+password = ""
+db = 0
+poolSize = 100
+

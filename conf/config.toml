@@ -1,7 +1,9 @@
 [app]
 name = "app"
-mode = "dev"
+mode = "debug"
 port = 8080
+startTime = "2021-04-01"
+machineId = 1
 
 [db]
 host = "127.0.0.1"

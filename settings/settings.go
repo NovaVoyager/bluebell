@@ -17,9 +17,11 @@ type Config struct {
 }
 
 type AppConf struct {
-	Name string `mapstructure:"name"`
-	Mode string `mapstructure:"mode"`
-	Port int    `mapstructure:"port"`
+	Name      string `mapstructure:"name"`
+	Mode      string `mapstructure:"mode"`
+	Port      int    `mapstructure:"port"`
+	StartTime string `mapstructure:"startTime"`
+	MachineId int64  `mapstructure:"machineId"`
 }
 
 type DbConf struct {
@@ -48,11 +50,11 @@ type RedisConf struct {
 	PoolSize int    `mapstructure:"poolSize"`
 }
 
-func Init(filePath string) {
-	//viper.SetConfigName("config")
-	//viper.SetConfigType("toml")
-	//viper.AddConfigPath("./conf/")
-	viper.SetConfigFile(filePath)
+func Init() {
+	viper.SetConfigName("config")
+	viper.SetConfigType("toml")
+	viper.AddConfigPath("./conf/")
+	//viper.SetConfigFile(filePath)
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)

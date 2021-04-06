@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/miaogu-go/bluebell/controller"
+
 	"github.com/miaogu-go/bluebell/dao/mysql"
 	"github.com/miaogu-go/bluebell/dao/redis"
 	"github.com/miaogu-go/bluebell/logger"
@@ -44,7 +46,13 @@ func main() {
 	redis.Init(settings.Conf.RedisConf)
 	defer redis.Close()
 	if err := snowflake.Init(settings.Conf.AppConf.StartTime, settings.Conf.AppConf.MachineId); err != nil {
-
+		fmt.Printf("init snowflake failed,err:%#v\n", err)
+		return
+	}
+	//初始化验证器
+	if err := controller.InitTrans("zh"); err != nil {
+		fmt.Printf("init translation failed,err:%#v\n", err)
+		return
 	}
 	//初始化路由
 	r := routes.Setup()

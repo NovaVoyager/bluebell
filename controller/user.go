@@ -24,6 +24,11 @@ func SignUpHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"msg": removeTopStruct(errs.Translate(trans))})
 		return
 	}
-	logic.Signup(param)
+	err := logic.Signup(param)
+	if err != nil {
+		zap.L().Error("注册失败", zap.Error(err))
+		c.JSON(http.StatusOK, gin.H{"msg": "注册失败"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"msg": "success"})
 }

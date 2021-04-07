@@ -37,7 +37,7 @@ func main() {
 	//初始化配置文件
 	settings.Init()
 	//初始化日志
-	logger.Init(settings.Conf.LogConf)
+	logger.Init(settings.Conf)
 	defer zap.L().Sync()
 	//初始化mysql
 	mysql.Init(settings.Conf.DbConf)

@@ -14,7 +14,7 @@ var db *sqlx.DB
 func Init(dbConf *settings.DbConf) {
 	var err error
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True", dbConf.User, dbConf.Password, dbConf.Host,
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True&loc=Local", dbConf.User, dbConf.Password, dbConf.Host,
 		dbConf.Port, dbConf.DbName)
 	//dsn := "root:123456@tcp(127.0.0.1:3306)/blog?parseTime=True"
 	db, err = sqlx.Connect("mysql", dsn)

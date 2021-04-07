@@ -17,17 +17,26 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-func Init(logConf *settings.LogConf) {
+func Init(conf *settings.Config) {
 	l := new(zapcore.Level)
 
-	writeSyncer := getLogWrite(logConf.Filename, logConf.MaxSize, logConf.MaxAge, logConf.MaxBackups)
+	writeSyncer := getLogWrite(conf.LogConf.Filename, conf.LogConf.MaxSize, conf.LogConf.MaxAge, conf.LogConf.MaxBackups)
 	encoder := getEncoder()
-	err := l.UnmarshalText([]byte(logConf.Level))
+	err := l.UnmarshalText([]byte(conf.LogConf.Level))
 	if err != nil {
 		panic(err)
 	}
-
-	core := zapcore.NewCore(encoder, writeSyncer, l)
+	var core zapcore.Core
+	if conf.AppConf.Mode == gin.DebugMode {
+		//日志输出到终端
+		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
+		core = zapcore.NewTee(
+			zapcore.NewCore(encoder, writeSyncer, l),
+			zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), zapcore.DebugLevel),
+		)
+	} else {
+		core = zapcore.NewCore(encoder, writeSyncer, l)
+	}
 	logger := zap.New(core, zap.AddCaller())
 	//替换zap全局的logger
 	zap.ReplaceGlobals(logger)

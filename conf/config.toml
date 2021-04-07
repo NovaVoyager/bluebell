@@ -10,7 +10,7 @@ host = "127.0.0.1"
 port = 3306
 user = "root"
 password = "123456"
-dbname = "blog"
+dbname = "bluebell"
 maxOpenConn = 50
 maxIdleConn = 10
 

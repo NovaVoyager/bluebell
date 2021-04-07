@@ -12,6 +12,7 @@ import (
 )
 
 func Setup() *gin.Engine {
+	setRunMode()
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
@@ -22,4 +23,18 @@ func Setup() *gin.Engine {
 	r.POST("/signup", controller.SignUpHandler)
 
 	return r
+}
+
+// setRunMode 设置运行模式
+func setRunMode() {
+	switch settings.Conf.AppConf.Mode {
+	case "debug":
+		gin.SetMode(gin.DebugMode)
+	case "release":
+		gin.SetMode(gin.ReleaseMode)
+	case "test":
+		gin.SetMode(gin.TestMode)
+	default:
+		gin.SetMode(gin.DebugMode)
+	}
 }

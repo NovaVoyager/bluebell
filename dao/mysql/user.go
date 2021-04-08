@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/miaogu-go/bluebell/pkg/tools"
@@ -39,9 +40,12 @@ func CreateUser(user *models.User) error {
 }
 
 func QueryUserByUsername(username string) (*User, error) {
-	sql := "SELECT * FROM `user` WHERE `username`=?"
+	sqlStr := "SELECT * FROM `user` WHERE `username`=?"
 	user := new(User)
-	err := db.Get(user, sql, username)
+	err := db.Get(user, sqlStr, username)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, err
 	}

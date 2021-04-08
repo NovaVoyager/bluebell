@@ -43,7 +43,7 @@ func Login(param *models.LoginReq) error {
 	if err != nil {
 		return err
 	}
-	if user.UserId == 0 {
+	if user == nil {
 		return errors.New("用户不存在")
 	}
 	if user.Password != tools.EncryptPassword(param.Password, PasswordSalt) {

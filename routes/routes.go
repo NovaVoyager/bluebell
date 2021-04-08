@@ -20,7 +20,10 @@ func Setup() *gin.Engine {
 		c.String(http.StatusOK, fmt.Sprintf("%s", settings.Conf.AppConf.Name))
 	})
 
+	//注册
 	r.POST("/signup", controller.SignUpHandler)
+	//登录
+	r.POST("/login", controller.LoginHandler)
 
 	return r
 }

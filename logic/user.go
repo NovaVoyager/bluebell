@@ -14,6 +14,12 @@ const (
 	PasswordSalt = "20210407160200"
 )
 
+var (
+	ErrorUserExist       = errors.New("用户已存在")
+	ErrorUserNotExist    = errors.New("用户不存在")
+	ErrorInvalidPassword = errors.New("密码错误")
+)
+
 // Signup 注册
 func Signup(param *models.SignupReq) error {
 	userIsExist, err := mysql.CheckUserExist(param.User)
@@ -21,7 +27,7 @@ func Signup(param *models.SignupReq) error {
 		return err
 	}
 	if userIsExist {
-		return errors.New("用户已存在")
+		return ErrorUserExist
 	}
 	userId := snowflake.GetID()
 	u := &models.User{
@@ -44,10 +50,10 @@ func Login(param *models.LoginReq) error {
 		return err
 	}
 	if user == nil {
-		return errors.New("用户不存在")
+		return ErrorUserNotExist
 	}
 	if user.Password != tools.EncryptPassword(param.Password, PasswordSalt) {
-		return errors.New("密码错误")
+		return ErrorInvalidPassword
 	}
 
 	return nil

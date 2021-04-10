@@ -54,7 +54,7 @@ func LoginHandler(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	err := logic.Login(param)
+	token, err := logic.Login(param)
 	if err != nil {
 		zap.L().Error("LoginHandler failed", zap.String("username", param.User), zap.Error(err))
 		if errors.Is(err, logic.ErrorUserNotExist) {
@@ -68,5 +68,5 @@ func LoginHandler(c *gin.Context) {
 		ResponseError(c, CodeInvalidPassword)
 		return
 	}
-	ResponseSuccess(c, nil)
+	ResponseSuccess(c, token)
 }

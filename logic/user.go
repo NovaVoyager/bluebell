@@ -3,6 +3,8 @@ package logic
 import (
 	"errors"
 
+	"github.com/miaogu-go/bluebell/pkg/jwt"
+
 	"github.com/miaogu-go/bluebell/pkg/tools"
 
 	"github.com/miaogu-go/bluebell/dao/mysql"
@@ -44,17 +46,17 @@ func Signup(param *models.SignupReq) error {
 }
 
 // Login 登录
-func Login(param *models.LoginReq) error {
+func Login(param *models.LoginReq) (string, error) {
 	user, err := mysql.QueryUserByUsername(param.User)
 	if err != nil {
-		return err
+		return "", err
 	}
 	if user == nil {
-		return ErrorUserNotExist
+		return "", ErrorUserNotExist
 	}
 	if user.Password != tools.EncryptPassword(param.Password, PasswordSalt) {
-		return ErrorInvalidPassword
+		return "", ErrorInvalidPassword
 	}
 
-	return nil
+	return jwt.GenerateToken(user.Username, user.UserId)
 }

@@ -11,16 +11,18 @@ const (
 	CodeServerBusy
 
 	CodeTokenInvalid
+	CodeRefreshTokenFail
 )
 
 var codeMsgMap = map[ResCode]string{
-	CodeSuccess:         "success",
-	CodeInvalidParam:    "参数错误",
-	CodeUserExist:       "用户已存在",
-	CodeUserNotExist:    "用户不存在",
-	CodeInvalidPassword: "用户名或密码错误",
-	CodeServerBusy:      "服务繁忙",
-	CodeTokenInvalid:    "token无效",
+	CodeSuccess:          "success",
+	CodeInvalidParam:     "参数错误",
+	CodeUserExist:        "用户已存在",
+	CodeUserNotExist:     "用户不存在",
+	CodeInvalidPassword:  "用户名或密码错误",
+	CodeServerBusy:       "服务繁忙",
+	CodeTokenInvalid:     "token无效",
+	CodeRefreshTokenFail: "token刷新失败",
 }
 
 func (c ResCode) Msg() string {

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/miaogu-go/bluebell/middlewares"
+
 	"github.com/miaogu-go/bluebell/controller"
 	"github.com/miaogu-go/bluebell/logger"
 	"github.com/miaogu-go/bluebell/settings"
@@ -24,6 +26,10 @@ func Setup() *gin.Engine {
 	r.POST("/signup", controller.SignUpHandler)
 	//登录
 	r.POST("/login", controller.LoginHandler)
+	//验证token
+	r.POST("/ping", middlewares.JWTAuthMiddleware(), controller.PingHandler)
+	//刷新token
+	r.POST("/refresh", controller.RefreshTokenHandler)
 
 	return r
 }

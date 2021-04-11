@@ -70,3 +70,26 @@ func LoginHandler(c *gin.Context) {
 	}
 	ResponseSuccess(c, token)
 }
+
+// PingHandler
+func PingHandler(c *gin.Context) {
+	ResponseSuccess(c, "success")
+}
+
+// RefreshTokenHandler 刷新token
+func RefreshTokenHandler(c *gin.Context) {
+	accessToken := c.Request.Header.Get("Authorization")
+	refreshToken := c.Request.Header.Get("Refresh-Token")
+	if accessToken == "" || refreshToken == "" {
+		ResponseError(c, CodeTokenInvalid)
+		return
+	}
+	token, err := logic.RefreshToken(c, accessToken, refreshToken)
+	if err != nil {
+		zap.L().Error("RefreshTokenHandler failed", zap.String("accessToken", accessToken),
+			zap.String("refreshToken", refreshToken), zap.Error(err))
+		ResponseError(c, CodeRefreshTokenFail)
+		return
+	}
+	ResponseSuccess(c, token)
+}

@@ -30,8 +30,8 @@ func ResponseSuccess(c *gin.Context, data interface{}) {
 
 func ResponseErrorWithMsg(c *gin.Context, code ResCode, msg interface{}) {
 	c.JSON(http.StatusOK, ResponseData{
-		Code: CodeSuccess,
-		Msg:  CodeSuccess.Msg(),
+		Code: code,
+		Msg:  msg,
 		Data: nil,
 	})
 }

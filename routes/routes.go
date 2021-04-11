@@ -1,9 +1,6 @@
 package routes
 
 import (
-	"fmt"
-	"net/http"
-
 	"github.com/miaogu-go/bluebell/middlewares"
 
 	"github.com/miaogu-go/bluebell/controller"
@@ -18,18 +15,22 @@ func Setup() *gin.Engine {
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, fmt.Sprintf("%s", settings.Conf.AppConf.Name))
-	})
-
+	v1 := r.Group("/api/v1")
 	//注册
-	r.POST("/signup", controller.SignUpHandler)
+	v1.POST("/signup", controller.SignUpHandler)
 	//登录
-	r.POST("/login", controller.LoginHandler)
+	v1.POST("/login", controller.LoginHandler)
+
+	v1.Use(middlewares.JWTAuthMiddleware())
 	//验证token
-	r.POST("/ping", middlewares.JWTAuthMiddleware(), controller.PingHandler)
+	v1.POST("/ping", controller.PingHandler)
+	{
+		//获取社区列表
+		v1.GET("/community", controller.CommunityHandler)
+	}
 	//刷新token
 	r.POST("/refresh", controller.RefreshTokenHandler)
+	//
 
 	return r
 }

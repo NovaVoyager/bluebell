@@ -14,3 +14,13 @@ func GetCommunityList(c *gin.Context) ([]mysql.Community, error) {
 
 	return communities, nil
 }
+
+// GetCommunityDetail 获取社区详情
+func GetCommunityDetail(c *gin.Context, id int64) (*mysql.Community, error) {
+	community, err := mysql.GetCommunityDetailById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return community, nil
+}

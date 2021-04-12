@@ -27,10 +27,11 @@ func Setup() *gin.Engine {
 	{
 		//获取社区列表
 		v1.GET("/community", controller.CommunityHandler)
+		//获取社区详情
+		v1.GET("/community/:id", controller.GetCommunityDetail)
 	}
 	//刷新token
 	r.POST("/refresh", controller.RefreshTokenHandler)
-	//
 
 	return r
 }

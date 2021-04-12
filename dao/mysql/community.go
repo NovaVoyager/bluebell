@@ -1,5 +1,7 @@
 package mysql
 
+import "database/sql"
+
 const (
 	TableNameCommunity = "community"
 )
@@ -23,4 +25,19 @@ func GetCommunityList() ([]Community, error) {
 	}
 
 	return communities, nil
+}
+
+// GetCommunityDetailById 根据社区id获取详情
+func GetCommunityDetailById(id int64) (*Community, error) {
+	sqlStr := "SELECT * FROM " + TableNameCommunity + " WHERE community_id=?"
+	community := new(Community)
+	err := db.Get(community, sqlStr, id)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return community, nil
 }

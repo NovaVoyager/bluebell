@@ -29,6 +29,8 @@ func Setup() *gin.Engine {
 		v1.GET("/community", controller.CommunityHandler)
 		//获取社区详情
 		v1.GET("/community/:id", controller.GetCommunityDetail)
+		//创建帖子
+		v1.POST("/post/create", controller.CreatePostHandler)
 	}
 	//刷新token
 	r.POST("/refresh", controller.RefreshTokenHandler)

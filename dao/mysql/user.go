@@ -16,14 +16,14 @@ const (
 var cstZone = time.FixedZone("CST", 8*3600)
 
 type User struct {
-	Id         uint64    `db:"id"`
-	UserId     int64     `db:"user_id"`
-	Username   string    `db:"username"`
-	Password   string    `db:"password"`
-	Email      string    `db:"email"`
-	Gender     int       `db:"gender"`
-	CreateTime time.Time `db:"create_time"`
-	UpdateTime time.Time `db:"update_time"`
+	Id         uint64 `db:"id"`
+	UserId     int64  `db:"user_id"`
+	Username   string `db:"username"`
+	Password   string `db:"password"`
+	Email      string `db:"email"`
+	CreateTime string `db:"create_time"`
+	UpdateTime string `db:"update_time"`
+	Gender     int    `db:"gender"`
 }
 
 // CreateUser 创建用户

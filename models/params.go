@@ -10,3 +10,11 @@ type LoginReq struct {
 	User     string `json:"user" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
+
+type CreatePostReq struct {
+	Title       string `json:"title" binding:"required"`
+	Content     string `json:"content" binding:"required"`
+	CommunityId int64  `json:"community_id" binding:"required"`
+	AuthorId    int64  `json:"author_id"`
+	PostId      int64  `json:"post_id"`
+}

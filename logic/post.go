@@ -7,6 +7,12 @@ import (
 	"github.com/miaogu-go/bluebell/pkg/snowflake"
 )
 
+type PostDetail struct {
+	AuthorName string `json:"author_name"`
+	mysql.Post
+	Community mysql.Community `json:"community"`
+}
+
 // CreatePost 创建帖子
 func CreatePost(c *gin.Context, param *models.CreatePostReq) error {
 	param.PostId = snowflake.GetID()
@@ -16,4 +22,27 @@ func CreatePost(c *gin.Context, param *models.CreatePostReq) error {
 	}
 
 	return nil
+}
+
+// GetPostDetail 获取帖子详情
+func GetPostDetail(c *gin.Context, postId int64) (*PostDetail, error) {
+	post, err := mysql.GetPostById(postId)
+	if err != nil {
+		return nil, err
+	}
+	user, err := mysql.GetUserByUserId(post.AuthorId)
+	if err != nil {
+		return nil, err
+	}
+	community, err := mysql.GetCommunityDetailById(post.CommunityId)
+	if err != nil {
+		return nil, err
+	}
+	postDetail := &PostDetail{
+		AuthorName: user.Username,
+		Post:       *post,
+		Community:  *community,
+	}
+
+	return postDetail, nil
 }

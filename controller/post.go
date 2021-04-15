@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/miaogu-go/bluebell/logic"
@@ -35,4 +37,22 @@ func CreatePostHandler(c *gin.Context) {
 		return
 	}
 	ResponseSuccess(c, nil)
+}
+
+// GetPostDetailHandler 获取帖子详情
+func GetPostDetailHandler(c *gin.Context) {
+	idStr := c.Param("id")
+	postId, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		zap.L().Error("Param id failed", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	data, err := logic.GetPostDetail(c, postId)
+	if err != nil {
+		zap.L().Error("GetPostDetail(postId) failed", zap.Error(err), zap.Int64("postId", postId))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
 }

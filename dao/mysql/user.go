@@ -62,3 +62,18 @@ func CheckUserExist(username string) (bool, error) {
 	}
 	return count > 0, nil
 }
+
+// GetUserByUserId 根据userId获取用户信息
+func GetUserByUserId(userId int64) (*User, error) {
+	sqlStr := "SELECT * FROM `user` WHERE user_id=?"
+	user := new(User)
+	err := db.Get(user, sqlStr, userId)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}

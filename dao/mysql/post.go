@@ -50,3 +50,16 @@ func GetPostById(postId int64) (*Post, error) {
 
 	return post, nil
 }
+
+// GetPosts 获取帖子列表
+func GetPosts(page, pageSize uint) ([]Post, error) {
+	offset := (page - 1) * pageSize
+	sqlStr := "SELECT * FROM " + TableNamePost + " ORDER BY create_time DESC LIMIT ?,?"
+	posts := make([]Post, 0)
+	err := db.Select(&posts, sqlStr, offset, pageSize)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}

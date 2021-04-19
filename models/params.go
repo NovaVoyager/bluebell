@@ -18,3 +18,8 @@ type CreatePostReq struct {
 	AuthorId    int64  `json:"author_id"`
 	PostId      int64  `json:"post_id"`
 }
+
+type PostsReq struct {
+	Page     uint `json:"page"`
+	PageSize uint `json:"page_size"`
+}

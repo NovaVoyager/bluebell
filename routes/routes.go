@@ -33,6 +33,8 @@ func Setup() *gin.Engine {
 		v1.POST("/post/create", controller.CreatePostHandler)
 		//获取帖子详情
 		v1.GET("/post/:id", controller.GetPostDetailHandler)
+		//帖子列表
+		v1.POST("/posts", controller.GetPostsHandler)
 	}
 	//刷新token
 	r.POST("/refresh", controller.RefreshTokenHandler)

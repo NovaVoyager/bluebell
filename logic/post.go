@@ -46,3 +46,13 @@ func GetPostDetail(c *gin.Context, postId int64) (*PostDetail, error) {
 
 	return postDetail, nil
 }
+
+// GetPosts 帖子列表
+func GetPosts(c *gin.Context, param *models.PostsReq) ([]mysql.Post, error) {
+	posts, err := mysql.GetPosts(param.Page, param.PageSize)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}

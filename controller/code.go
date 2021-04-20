@@ -12,6 +12,8 @@ const (
 
 	CodeTokenInvalid
 	CodeRefreshTokenFail
+
+	CodeVoteExpire
 )
 
 var codeMsgMap = map[ResCode]string{
@@ -23,6 +25,7 @@ var codeMsgMap = map[ResCode]string{
 	CodeServerBusy:       "服务繁忙",
 	CodeTokenInvalid:     "token无效",
 	CodeRefreshTokenFail: "token刷新失败",
+	CodeVoteExpire:       "投票时间已过",
 }
 
 func (c ResCode) Msg() string {

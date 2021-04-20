@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"errors"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/miaogu-go/bluebell/logic"
 	"github.com/miaogu-go/bluebell/models"
 	"go.uber.org/zap"
 )
@@ -20,15 +23,22 @@ func VoteHandler(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	/*err := logic.Signup(param)
+	userId, err := GetUserInfo(c)
 	if err != nil {
-		if errors.Is(err, logic.ErrorUserExist) {
-			ResponseError(c, CodeUserExist)
+		zap.L().Error("GetUserInfo fail", zap.Error(err))
+		ResponseError(c, CodeTokenInvalid)
+		return
+	}
+	err = logic.VoteForPost(c, userId, param)
+	if err != nil {
+		zap.L().Error("logic.VoteForPost(c, userId) failed", zap.Error(err), zap.Int64("postId", param.PostId),
+			zap.Int64("userId", userId), zap.Int8("direction", param.Direction))
+		if errors.Is(err, logic.ErrVoteTimeExpire) {
+			ResponseError(c, CodeVoteExpire)
 			return
 		}
-		zap.L().Error("注册失败", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
-	}*/
+	}
 	ResponseSuccess(c, nil)
 }

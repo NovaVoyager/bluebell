@@ -13,13 +13,14 @@ import (
 
 const (
 	OneWeekInSeconds = 7 * 86400
-	ScorePerVote     = 423
+	ScorePerVote     = 432
 )
 
 var (
 	ErrVoteTimeExpire = errors.New("投票时间已过")
 )
 
+// VoteForPost 投票
 func VoteForPost(c *gin.Context, userId int64, param *models.VoteReq) error {
 	postTime := redis.GetPostPublishTime(fmt.Sprintf("%d", param.PostId))
 	if float64(time.Now().Unix())-postTime > OneWeekInSeconds {

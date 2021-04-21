@@ -78,3 +78,25 @@ func GetPostsHandler(c *gin.Context) {
 	}
 	ResponseSuccess(c, data)
 }
+
+// GetPosts2Handler 帖子列表2
+func GetPosts2Handler(c *gin.Context) {
+	param := new(models.PostsReq)
+	if err := c.ShouldBindJSON(param); err != nil {
+		zap.L().Error("GetPostsHandler failed", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if ok {
+			ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+			return
+		}
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	data, err := logic.GetPosts(c, param)
+	if err != nil {
+		zap.L().Error("CreatePost failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}

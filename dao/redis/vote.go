@@ -1,6 +1,10 @@
 package redis
 
-import "github.com/go-redis/redis"
+import (
+	"time"
+
+	"github.com/go-redis/redis"
+)
 
 // GetPostPublishTime 获取文章发布时间
 func GetPostPublishTime(postId string) float64 {
@@ -43,6 +47,20 @@ func SaveUserVoteRecord(postId, userId int64, direction float64) error {
 // RemUserVoteRecord 移除用户投票记录
 func RemUserVoteRecord(postId, userId int64) error {
 	err := rdb.ZRem(GetKeyPostVoted(postId), userId).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// SavePostPublishTime 保存帖子发布时间
+func SavePostPublishTime(postId int64) error {
+	z := redis.Z{
+		Score:  float64(time.Now().Unix()),
+		Member: postId,
+	}
+	err := rdb.ZAdd(GetKeyPostTime(), z).Err()
 	if err != nil {
 		return err
 	}

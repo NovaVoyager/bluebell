@@ -20,8 +20,9 @@ type CreatePostReq struct {
 }
 
 type PostsReq struct {
-	Page     uint `json:"page"`
-	PageSize uint `json:"page_size"`
+	Page      uint `json:"page"`
+	PageSize  uint `json:"page_size"`
+	OrderType int8 `json:"order_type"`
 }
 
 type VoteReq struct {

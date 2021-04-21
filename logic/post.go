@@ -3,6 +3,7 @@ package logic
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/miaogu-go/bluebell/dao/mysql"
+	"github.com/miaogu-go/bluebell/dao/redis"
 	"github.com/miaogu-go/bluebell/models"
 	"github.com/miaogu-go/bluebell/pkg/snowflake"
 )
@@ -20,7 +21,11 @@ func CreatePost(c *gin.Context, param *models.CreatePostReq) error {
 	if err != nil {
 		return err
 	}
-
+	// 保存发布时间
+	err = redis.SavePostPublishTime(param.PostId)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

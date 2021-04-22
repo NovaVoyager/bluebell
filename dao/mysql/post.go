@@ -2,7 +2,10 @@ package mysql
 
 import (
 	"database/sql"
+	"strings"
 	"time"
+
+	"github.com/jmoiron/sqlx"
 
 	"github.com/miaogu-go/bluebell/models"
 )
@@ -57,6 +60,23 @@ func GetPosts(page, pageSize uint) ([]Post, error) {
 	sqlStr := "SELECT * FROM " + TableNamePost + " ORDER BY create_time DESC LIMIT ?,?"
 	posts := make([]Post, 0)
 	err := db.Select(&posts, sqlStr, offset, pageSize)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+// GetPostsByIds 根据文章ids获取文章列表
+func GetPostsByIds(postIds []string) ([]Post, error) {
+	sqlStr := "SELECT * FROM " + TableNamePost + " WHERE post_id IN (?) ORDER BY FIND_IN_SET(post_id,?)"
+	query, args, err := sqlx.In(sqlStr, postIds, strings.Join(postIds, ","))
+	if err != nil {
+		return nil, err
+	}
+	query = db.Rebind(query)
+	posts := make([]Post, 0)
+	err = db.Select(&posts, query, args...)
 	if err != nil {
 		return nil, err
 	}

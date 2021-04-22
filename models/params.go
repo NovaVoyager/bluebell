@@ -22,7 +22,7 @@ type CreatePostReq struct {
 type PostsReq struct {
 	Page      uint `json:"page"`
 	PageSize  uint `json:"page_size"`
-	OrderType int8 `json:"order_type"`
+	OrderType int8 `json:"order_type"` // 1 时间，2 点赞
 }
 
 type VoteReq struct {

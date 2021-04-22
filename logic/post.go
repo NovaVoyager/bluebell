@@ -61,3 +61,26 @@ func GetPosts(c *gin.Context, param *models.PostsReq) ([]mysql.Post, error) {
 
 	return posts, nil
 }
+
+// GetPosts2 帖子列表2
+func GetPosts2(c *gin.Context, param *models.PostsReq) ([]mysql.Post, error) {
+	start := (param.Page - 1) * param.PageSize
+	postIds := make([]string, 0)
+	if param.OrderType == models.PostOrderTypeTime {
+		postIds = redis.GetPostIdsByTime(int64(start), int64(param.PageSize))
+		if postIds == nil || len(postIds) == 0 {
+			return nil, nil
+		}
+	} else {
+		postIds = redis.GetPostIdsByScore(int64(start), int64(param.PageSize))
+		if postIds == nil || len(postIds) == 0 {
+			return nil, nil
+		}
+	}
+	posts, err := mysql.GetPostsByIds(postIds)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}

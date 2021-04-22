@@ -92,9 +92,9 @@ func GetPosts2Handler(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	data, err := logic.GetPosts(c, param)
+	data, err := logic.GetPosts2(c, param)
 	if err != nil {
-		zap.L().Error("CreatePost failed", zap.Error(err))
+		zap.L().Error("logic.GetPosts2(c, param) failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}

@@ -67,3 +67,15 @@ func SavePostPublishTime(postId int64) error {
 
 	return nil
 }
+
+// GetPostIdsByTime 根据时间获取帖子指定范围的ids
+func GetPostIdsByTime(start, stop int64) []string {
+	key := GetKeyPostTime()
+	return rdb.ZRevRange(key, start, stop).Val()
+}
+
+// GetPostIdsByScore 根据分数获取帖子指定范围的ids
+func GetPostIdsByScore(start, stop int64) []string {
+	key := GetKeyPostScore()
+	return rdb.ZRevRange(key, start, stop).Val()
+}

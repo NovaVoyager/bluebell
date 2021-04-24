@@ -37,6 +37,10 @@ func VoteHandler(c *gin.Context) {
 			ResponseError(c, CodeVoteExpire)
 			return
 		}
+		if errors.Is(err, logic.ErrVoted) {
+			ResponseError(c, CodeNotRepeatVote)
+			return
+		}
 		ResponseError(c, CodeServerBusy)
 		return
 	}

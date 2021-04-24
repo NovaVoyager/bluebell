@@ -10,6 +10,7 @@ import (
 
 type PostDetail struct {
 	AuthorName string `json:"author_name"`
+	VoteNum    int64  `json:"vote_num"`
 	mysql.Post
 	Community mysql.Community `json:"community"`
 }
@@ -63,7 +64,7 @@ func GetPosts(c *gin.Context, param *models.PostsReq) ([]mysql.Post, error) {
 }
 
 // GetPosts2 帖子列表2
-func GetPosts2(c *gin.Context, param *models.PostsReq) ([]mysql.Post, error) {
+func GetPosts2(c *gin.Context, param *models.PostsReq) ([]PostDetail, error) {
 	start := (param.Page - 1) * param.PageSize
 	postIds := make([]string, 0)
 	if param.OrderType == models.PostOrderTypeTime {
@@ -81,6 +82,29 @@ func GetPosts2(c *gin.Context, param *models.PostsReq) ([]mysql.Post, error) {
 	if err != nil {
 		return nil, err
 	}
+	//获取帖子赞成票数量
+	voteNums, err := redis.GetPostVoteNums(postIds)
+	if err != nil {
+		return nil, err
+	}
+	postsResp := make([]PostDetail, 0, len(posts))
+	for i, post := range posts {
+		user, err := mysql.GetUserByUserId(post.AuthorId)
+		if err != nil {
+			return nil, err
+		}
+		community, err := mysql.GetCommunityDetailById(post.CommunityId)
+		if err != nil {
+			return nil, err
+		}
+		postDetail := PostDetail{
+			AuthorName: user.Username,
+			Post:       post,
+			Community:  *community,
+			VoteNum:    voteNums[i],
+		}
+		postsResp = append(postsResp, postDetail)
+	}
 
-	return posts, nil
+	return postsResp, nil
 }

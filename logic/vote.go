@@ -18,6 +18,7 @@ const (
 
 var (
 	ErrVoteTimeExpire = errors.New("投票时间已过")
+	ErrVoted          = errors.New("请勿重复投票")
 )
 
 // VoteForPost 投票
@@ -27,6 +28,9 @@ func VoteForPost(c *gin.Context, userId int64, param *models.VoteReq) error {
 		return ErrVoteTimeExpire
 	}
 	ov := redis.GetPostVoteUser(param.PostId, fmt.Sprintf("%d", userId))
+	if ov == float64(param.Direction) {
+		return ErrVoted
+	}
 	var dir float64
 	if float64(param.Direction) > ov {
 		dir = 1

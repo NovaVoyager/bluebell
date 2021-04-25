@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/miaogu-go/bluebell/dao/mysql"
 	"github.com/miaogu-go/bluebell/dao/redis"
@@ -24,6 +26,11 @@ func CreatePost(c *gin.Context, param *models.CreatePostReq) error {
 	}
 	// 保存发布时间
 	err = redis.SavePostPublishTime(param.PostId)
+	if err != nil {
+		return err
+	}
+	//保存社区与帖子集合
+	err = redis.SaveCommunityPost(fmt.Sprintf("%d", param.CommunityId), param.PostId)
 	if err != nil {
 		return err
 	}
@@ -65,17 +72,31 @@ func GetPosts(c *gin.Context, param *models.PostsReq) ([]mysql.Post, error) {
 
 // GetPosts2 帖子列表2
 func GetPosts2(c *gin.Context, param *models.PostsReq) ([]PostDetail, error) {
+	var err error
 	start := (param.Page - 1) * param.PageSize
+	pageSize := start + 1
 	postIds := make([]string, 0)
-	if param.OrderType == models.PostOrderTypeTime {
-		postIds = redis.GetPostIdsByTime(int64(start), int64(param.PageSize))
-		if postIds == nil || len(postIds) == 0 {
-			return nil, nil
+	//根据社区id判断是跟时间还是分数虎丘帖子列表
+	//分数：按照分数获取
+	//时间：按照时间取
+	if param.CommunityId > 0 { //按照社区key查询
+		//获取社区文章key
+		communityPosyKey := redis.GetKeyCommunityPost(fmt.Sprintf("%d", param.CommunityId))
+		postIds, err = redis.GetCommunityPostIds(communityPosyKey, param.OrderType, int64(start), int64(pageSize))
+		if err != nil {
+			return nil, err
 		}
 	} else {
-		postIds = redis.GetPostIdsByScore(int64(start), int64(param.PageSize))
-		if postIds == nil || len(postIds) == 0 {
-			return nil, nil
+		if param.OrderType == models.PostOrderTypeTime { //按照时间获取
+			postIds = redis.GetPostIdsByTime(int64(start), int64(pageSize))
+			if postIds == nil || len(postIds) == 0 {
+				return nil, nil
+			}
+		} else {
+			postIds = redis.GetPostIdsByScore(int64(start), int64(pageSize))
+			if postIds == nil || len(postIds) == 0 {
+				return nil, nil
+			}
 		}
 	}
 	posts, err := mysql.GetPostsByIds(postIds)

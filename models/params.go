@@ -20,9 +20,10 @@ type CreatePostReq struct {
 }
 
 type PostsReq struct {
-	Page      uint `json:"page"`
-	PageSize  uint `json:"page_size"`
-	OrderType int8 `json:"order_type"` // 1 时间，2 点赞
+	Page        uint  `json:"page"`
+	PageSize    uint  `json:"page_size"`
+	OrderType   int8  `json:"order_type"` // 1 时间，2 点赞
+	CommunityId int64 `json:"community_id"`
 }
 
 type VoteReq struct {

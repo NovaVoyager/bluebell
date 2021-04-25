@@ -69,6 +69,9 @@ func GetPosts(page, pageSize uint) ([]Post, error) {
 
 // GetPostsByIds 根据文章ids获取文章列表
 func GetPostsByIds(postIds []string) ([]Post, error) {
+	if postIds == nil || len(postIds) == 0 {
+		return nil, nil
+	}
 	sqlStr := "SELECT * FROM " + TableNamePost + " WHERE post_id IN (?) ORDER BY FIND_IN_SET(post_id,?)"
 	query, args, err := sqlx.In(sqlStr, postIds, strings.Join(postIds, ","))
 	if err != nil {

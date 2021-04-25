@@ -2,7 +2,6 @@ package redis
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -53,32 +52,6 @@ func RemUserVoteRecord(postId, userId int64) error {
 	}
 
 	return nil
-}
-
-// SavePostPublishTime 保存帖子发布时间
-func SavePostPublishTime(postId int64) error {
-	z := redis.Z{
-		Score:  float64(time.Now().Unix()),
-		Member: postId,
-	}
-	err := rdb.ZAdd(GetKeyPostTime(), z).Err()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// GetPostIdsByTime 根据时间获取帖子指定范围的ids
-func GetPostIdsByTime(start, stop int64) []string {
-	key := GetKeyPostTime()
-	return rdb.ZRevRange(key, start, stop).Val()
-}
-
-// GetPostIdsByScore 根据分数获取帖子指定范围的ids
-func GetPostIdsByScore(start, stop int64) []string {
-	key := GetKeyPostScore()
-	return rdb.ZRevRange(key, start, stop).Val()
 }
 
 // GetPostVoteNums 获取帖子投赞成票的数量

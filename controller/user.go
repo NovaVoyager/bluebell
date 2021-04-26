@@ -13,6 +13,16 @@ import (
 	"github.com/miaogu-go/bluebell/models"
 )
 
+// @Summary 用户注册
+// @Description 用户注册
+// @Tags 用户注册
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param object query models.ParamPostList false "查询参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponsePostList
+// @Router /api/v1/signup [post]
 // SignUpHandler 用户注册
 func SignUpHandler(c *gin.Context) {
 	param := new(models.SignupReq)
